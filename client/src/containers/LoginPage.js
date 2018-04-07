@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import LoginForm from '../components/LoginForm';
+import axios from 'axios';
 
 class LoginPage extends Component {
   state = {
@@ -18,7 +19,24 @@ class LoginPage extends Component {
 
   submitForm = event => {
     event.preventDefault();
-    console.log('Form login submitted', this.state);
+    const email = encodeURIComponent(this.state.user.email);
+    const password = encodeURIComponent(this.state.user.password);
+    const formData = `email=${email}&password=${password}`;
+    axios
+      .post('/auth/login', formData)
+      .then(response => {
+        this.setState({
+          errors: {}
+        });
+      })
+      .catch(error => {
+        const response = error.response.data;
+        const errors = response.errors || {};
+        errors.summary = response.message;
+        this.setState({
+          errors
+        });
+      });
   };
 
   render() {

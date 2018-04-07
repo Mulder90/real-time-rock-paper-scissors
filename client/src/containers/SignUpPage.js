@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SignUpForm from '../components/SignUpForm';
+import axios from 'axios';
 
 class SignUpPage extends Component {
   state = {
@@ -19,7 +20,25 @@ class SignUpPage extends Component {
 
   submitForm = event => {
     event.preventDefault();
-    console.log('Form signup submitted', this.state);
+    const name = encodeURIComponent(this.state.user.name);
+    const email = encodeURIComponent(this.state.user.email);
+    const password = encodeURIComponent(this.state.user.password);
+    const formData = `name=${name}&email=${email}&password=${password}`;
+    axios
+      .post('/auth/signup', formData)
+      .then(response => {
+        this.setState({
+          errors: {}
+        });
+      })
+      .catch(error => {
+        const response = error.response.data;
+        const errors = response.errors || {};
+        errors.summary = response.message;
+        this.setState({
+          errors
+        });
+      });
   };
 
   render() {
