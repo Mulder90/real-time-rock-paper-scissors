@@ -1,0 +1,27 @@
+{
+  "name": "rock-paper-scissors",
+  "version": "1.0.0",
+  "description": "Rock Paper Scissors game in React and Express",
+  "main": "index.js",
+  "engines": {
+    "node": ">= 7.6.0"
+  },
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon start-server.js",
+    "client": "node start-client.js"
+  },
+  "author": "Lorenzo Cinque",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "nodemon": "^1.17.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "mongoose": "^5.0.13"
+  }
+}
