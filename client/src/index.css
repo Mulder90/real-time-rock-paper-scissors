@@ -1,5 +1,65 @@
 body {
+  font-family: 'Roboto';
+  font-size: 16px;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+}
+
+a {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.top-bar {
+  margin-bottom: 50px;
+  padding: 10px 15px;
+}
+
+.top-bar::after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+.top-bar-left {
+  float: left;
+  font-size: 1.5em;
+}
+
+.top-bar-right {
+  float: right;
+}
+
+.top-bar a {
+  margin: 0 10px;
+}
+
+.top-bar button {
+  margin: 0 2px;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 700px;
+  text-align: center;
+}
+
+.card-heading {
+  padding: 16px;
+}
+
+.field-line,
+.button-line {
+  padding: 20px;
+}
+
+.error-message {
+  color: tomato;
+  padding: 0 16px;
+}
+
+.success-message {
+  color: green;
+  padding: 0 16px;
 }
