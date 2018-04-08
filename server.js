@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require('http');
+const socketIO = require('socket.io');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -26,9 +28,12 @@ app.use(passport.initialize());
 passport.use('localSignup', localSignupStrategy);
 passport.use('localLogin', localLoginStrategy);
 
-app.use('/api', authCheckMiddleware);
-
 app.use('/auth', authRoutes);
-app.use('/api', apiRoutes);
+app.use('/api/v1', authCheckMiddleware, apiRoutes);
 
-module.exports = app;
+const server = http.createServer(app);
+const io = socketIO(server);
+
+require('./socket')(io);
+
+module.exports = server;

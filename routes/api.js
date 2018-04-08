@@ -2,9 +2,9 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/dashboard', (req, res) => {
+router.get('/stats', (req, res) => {
   res.status(200).json({
-    message: 'Super secret dashboard'
+    message: 'Super secret stats eheheh'
   });
 });
 

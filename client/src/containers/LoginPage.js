@@ -29,8 +29,7 @@ class LoginPage extends Component {
     axios
       .post('/auth/login', formData)
       .then(response => {
-        Auth.authenticateUser(response.data.token);
-
+        Auth.authenticateUser(response.data.token, response.data.user.name);
         this.setState({
           errors: {},
           loggedIn: true
