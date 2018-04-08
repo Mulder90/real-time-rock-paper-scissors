@@ -1,5 +1,6 @@
 const express = require('express');
 const validator = require('validator');
+const passport = require('passport');
 
 const router = express.Router();
 
@@ -98,7 +99,28 @@ router.post('/login', (req, res, next) => {
     });
   }
 
-  return res.status(200).end();
+  return passport.authenticate('localLogin', (err, token, userData) => {
+    if (err) {
+      if (err.name === 'IncorrectCredentialsError') {
+        return res.status(400).json({
+          success: false,
+          message: err.message
+        });
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: 'Could not process the form.'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'You have successfully logged in.',
+      token,
+      user: userData
+    });
+  })(req, res, next);
 });
 
 router.post('/signup', (req, res, next) => {
@@ -111,7 +133,34 @@ router.post('/signup', (req, res, next) => {
     });
   }
 
-  return res.status(200).end();
+  return passport.authenticate('localSignup', err => {
+    const MONGO_DUPLICATION_ERROR = 11000;
+    if (err) {
+      if (
+        err.name === 'BulkWriteError' &&
+        err.code === MONGO_DUPLICATION_ERROR
+      ) {
+        return res.status(409).json({
+          success: false,
+          message: 'Check the form for errors.',
+          errors: {
+            email:
+              'This email is already taken. Please provide a different one.'
+          }
+        });
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: 'Could not process the form.'
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'You have successfull signed up!.'
+    });
+  })(req, res, next);
 });
 
 module.exports = router;

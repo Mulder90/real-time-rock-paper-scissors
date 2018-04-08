@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import LoginForm from '../components/LoginForm';
+import Auth from '../utils/Auth';
 import axios from 'axios';
 
 class LoginPage extends Component {
@@ -8,7 +10,9 @@ class LoginPage extends Component {
     user: {
       email: '',
       password: ''
-    }
+    },
+    loggedIn: false,
+    successMessage: ''
   };
 
   updateUser = event => {
@@ -25,8 +29,11 @@ class LoginPage extends Component {
     axios
       .post('/auth/login', formData)
       .then(response => {
+        Auth.authenticateUser(response.data.token);
+
         this.setState({
-          errors: {}
+          errors: {},
+          loggedIn: true
         });
       })
       .catch(error => {
@@ -39,12 +46,27 @@ class LoginPage extends Component {
       });
   };
 
+  componentDidMount() {
+    const successMessage = localStorage.getItem('successMessage') || '';
+    localStorage.removeItem('successMessage');
+
+    this.setState({
+      successMessage
+    });
+  }
+
   render() {
+    const { loggedIn } = this.state;
+    if (loggedIn) {
+      return <Redirect to="/" />;
+    }
+
     return (
       <LoginForm
         onChange={this.updateUser}
         onSubmit={this.submitForm}
         errors={this.state.errors}
+        successMessage={this.state.successMessage}
         user={this.state.user}
       />
     );

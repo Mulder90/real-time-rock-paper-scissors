@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import SignUpForm from '../components/SignUpForm';
 import axios from 'axios';
 
@@ -9,7 +10,8 @@ class SignUpPage extends Component {
       name: '',
       email: '',
       password: ''
-    }
+    },
+    signedUp: false
   };
 
   updateUser = event => {
@@ -27,8 +29,10 @@ class SignUpPage extends Component {
     axios
       .post('/auth/signup', formData)
       .then(response => {
+        localStorage.setItem('successMessage', response.data.message);
         this.setState({
-          errors: {}
+          errors: {},
+          signedUp: true
         });
       })
       .catch(error => {
@@ -42,6 +46,11 @@ class SignUpPage extends Component {
   };
 
   render() {
+    const { signedUp } = this.state;
+    if (signedUp) {
+      return <Redirect to="/login" />;
+    }
+
     return (
       <SignUpForm
         onChange={this.updateUser}

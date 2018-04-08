@@ -18,6 +18,8 @@ mongoose.connection.on('error', err => {
   console.error(`Mongoose error → ${err.message}`);
 });
 
+require('./models/user');
+
 const app = require('./app');
 app.set('port', process.env.PORT || 3001);
 const server = app.listen(app.get('port'), () => {

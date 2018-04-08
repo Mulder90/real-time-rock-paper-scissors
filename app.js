@@ -1,10 +1,16 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+
 const authRoutes = require('./routes/auth');
-const errorHandlers = require('./handlers/errorHandlers');
+const apiRoutes = require('./routes/api');
+const utils = require('./utils');
+
+const localSignupStrategy = require('./passport/localSignup');
+const localLoginStrategy = require('./passport/localLogin');
+
+const authCheckMiddleware = require('./middlewares/authCheck');
 
 const app = express();
 
@@ -13,15 +19,16 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  );
-  next();
-});
+app.use(utils.enableCors);
+
+app.use(passport.initialize());
+
+passport.use('localSignup', localSignupStrategy);
+passport.use('localLogin', localLoginStrategy);
+
+app.use('/api', authCheckMiddleware);
 
 app.use('/auth', authRoutes);
+app.use('/api', apiRoutes);
 
 module.exports = app;

@@ -23,7 +23,7 @@ ReactDOM.render(
             <h3>
               <Card className="container">
                 <CardContent>
-                  Error! No matches for <code>{location.pathname}</code>
+                  404! No matches for <code>{location.pathname}</code>
                 </CardContent>
               </Card>
             </h3>
