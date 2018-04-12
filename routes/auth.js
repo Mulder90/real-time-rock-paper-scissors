@@ -4,6 +4,22 @@ const passport = require('passport');
 
 const router = express.Router();
 
+const isEmailValid = email => {
+  return (
+    typeof email === 'string' &&
+    email.trim().length !== 0 &&
+    validator.isEmail(email)
+  );
+};
+
+const isUsernameValid = username => {
+  return typeof username === 'string' && username.trim().length !== 0;
+};
+
+const isPasswordValid = password => {
+  return typeof password === 'string' && password.trim().length >= 8;
+};
+
 const validateSignupForm = payload => {
   const errors = {
     email: '',
@@ -13,35 +29,28 @@ const validateSignupForm = payload => {
   let isFormValid = true;
   let message = '';
 
-  if (
-    !payload ||
-    typeof payload.email !== 'string' ||
-    !validator.isEmail(payload.email)
-  ) {
+  if (!payload) {
+    message = 'Please retry.';
     isFormValid = false;
-    errors.email = 'Please provide a correct email address.';
-  }
+  } else {
+    if (!isEmailValid(payload.email)) {
+      isFormValid = false;
+      errors.email = 'Please provide a correct email address.';
+    }
 
-  if (
-    !payload ||
-    typeof payload.password !== 'string' ||
-    payload.password.trim().length < 8
-  ) {
-    isFormValid = false;
-    errors.password = 'Password must have at least 8 characters.';
-  }
+    if (!isPasswordValid(payload.password)) {
+      isFormValid = false;
+      errors.password = 'Password must have at least 8 characters.';
+    }
 
-  if (
-    !payload ||
-    typeof payload.name !== 'string' ||
-    payload.name.trim().length === 0
-  ) {
-    isFormValid = false;
-    errors.name = 'Please provide your name.';
-  }
+    if (!isUsernameValid(payload.name)) {
+      isFormValid = false;
+      errors.name = 'Please provide your name.';
+    }
 
-  if (!isFormValid) {
-    message = 'Check the form for errors.';
+    if (!isFormValid) {
+      message = 'Check the form for errors.';
+    }
   }
 
   return {
@@ -59,27 +68,23 @@ const validateLoginForm = payload => {
   let isFormValid = true;
   let message = '';
 
-  if (
-    !payload ||
-    typeof payload.email !== 'string' ||
-    payload.email.trim().length === 0 ||
-    !validator.isEmail(payload.email)
-  ) {
+  if (!payload) {
+    message = 'Please retry.';
     isFormValid = false;
-    errors.email = 'Please provide a correct email address.';
-  }
+  } else {
+    if (!isEmailValid(payload.email)) {
+      isFormValid = false;
+      errors.email = 'Please provide a correct email address.';
+    }
 
-  if (
-    !payload ||
-    typeof payload.password !== 'string' ||
-    payload.password.trim().length < 8
-  ) {
-    isFormValid = false;
-    errors.password = 'Password must have at least 8 characters.';
-  }
+    if (!isPasswordValid(payload.password)) {
+      isFormValid = false;
+      errors.password = 'Password must have at least 8 characters.';
+    }
 
-  if (!isFormValid) {
-    message = 'Check the form for errors.';
+    if (!isFormValid) {
+      message = 'Check the form for errors.';
+    }
   }
 
   return {
