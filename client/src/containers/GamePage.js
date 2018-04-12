@@ -63,9 +63,11 @@ class GamePage extends Component {
     });
 
     this.socket.on('game::point', lastWinner => {
+      this.setState({
+        lastWinner
+      });
       window.setTimeout(() => {
         this.setState({
-          lastWinner,
           isSetFinished: true,
           playerWeapon: 'Please select a weapon...',
           opponentWeapon: 'Waiting...'

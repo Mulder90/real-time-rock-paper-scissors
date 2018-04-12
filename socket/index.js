@@ -144,12 +144,24 @@ const startSocket = io => {
                 room['player2']['lastMove']
               )
             ];
+
+          if (creator) {
+            socket.emit('opponent::fight', room['player2']['lastMove']);
+            socket.broadcast
+              .to(gameID)
+              .emit('opponent::fight', room['player1']['lastMove']);
+          } else {
+            socket.emit('opponent::fight', room['player1']['lastMove']);
+            socket.broadcast
+              .to(gameID)
+              .emit('opponent::fight', room['player2']['lastMove']);
+          }
+
           socket.emit('game::point', winner);
           socket.broadcast.to(gameID).emit('game::point', winner);
           room['player1']['lastMove'] = '';
           room['player2']['lastMove'] = '';
         }
-        socket.broadcast.to(gameID).emit('opponent::fight', weapon);
       }
     });
 
