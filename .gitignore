@@ -8,5 +8,3 @@
 .DS_Store
 *.env
 npm-debug.log*
-
-start.sh
